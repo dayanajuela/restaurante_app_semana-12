@@ -1,7 +1,7 @@
 # Sistema Básico de Gestión de Restaurante (POO)
 
 ## Información del Estudiante
-* **Nombre Completo:** [Keyder Dayana Juela Huanca]
+* **Nombre Completo:** Keyder Dayana Juela Huanca
 * **Materia:** Programación Orientada a Objetos
 * **Actividad:** Tarea Académica - Organizacion Modular de un Sistema
 
