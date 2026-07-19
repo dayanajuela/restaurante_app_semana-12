@@ -1,24 +1,47 @@
+# servicios/restaurante.py
+from typing import List
 from modelos.producto import Producto
+from modelos.cliente import Cliente
 
 class Restaurante:
-    """Clase de servicio encargada de administrar los productos del restaurante."""
-    
-    def __init__(self):
-        # Una sola lista para almacenar todos los productos (platillos y bebidas)
-        self.lista_productos = []
+    def __init__(self) -> None:
+        # Una sola lista común para Producto y Bebida (Polimorfismo / Liskov)
+        self._productos = []
+        self._clientes = []
 
-    def agregar_producto(self, producto: Producto):
-        """Añade un objeto de tipo Producto (o sus clases hijas) a la lista."""
-        self.lista_productos.append(producto)
-        print(f"✔️ Producto '{producto.nombre}' registrado con éxito.")
+    def registrar_producto(self, producto: Producto) -> bool:
+        # Validación estricta de no repetición de códigos
+        for p in self._productos:
+            if p.codigo == producto.codigo:
+                print("❌ Error: Ya existe un producto o bebida con este código.")
+                return False
+        self._productos.append(producto)
+        print("✅ Registrado en el sistema de manera exitosa.")
+        return True
 
-    def mostrar_restaurante(self):
-        """Muestra de manera organizada los datos en consola aplicando Polimorfismo."""
-        print("\n" + "="*20 + " MENÚ DEL RESTAURANTE " + "="*20)
-        if not self.lista_productos:
-            print("No hay productos registrados en este momento.")
-        else:
-            for producto in self.lista_productos:
-                # Polimorfismo: llama automáticamente al método de Platillo o Bebida según corresponda
-                print(producto.mostrar_informacion())
-        print("="*62)
+    def registrar_cliente(self, cliente: Cliente) -> bool:
+        # Validación de no repetición de identificaciones
+        for c in self._clientes:
+            if c.identificacion == cliente.identificacion:
+                print("❌ Error: Ya existe un cliente con esta identificación.")
+                return False
+        self._clientes.append(cliente)
+        print("✅ Cliente registrado de manera exitosa.")
+        return True
+
+    def listar_productos(self) -> None:
+        if not self._productos:
+            print("🫙 No hay productos ni bebidas registrados.")
+            return
+        print("\n--- LISTADO DE PRODUCTOS Y BEBIDAS ---")
+        for p in self._productos:
+            # Polimorfismo puro: sin usar condicionales "isinstance" para distinguir tipos
+            print(p.mostrar_informacion())
+
+    def listar_clientes(self) -> None:
+        if not self._clientes:
+            print("👤 No hay clientes registrados.")
+            return
+        print("\n--- LISTADO DE CLIENTES ---")
+        for c in self._clientes:
+            print(c.mostrar_informacion())

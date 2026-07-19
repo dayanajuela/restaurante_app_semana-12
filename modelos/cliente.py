@@ -1,11 +1,14 @@
-from dataclasses import dataclass
+# modelos/cliente.py
 
-@dataclass
 class Cliente:
-    nombre: str
-    correo: str
-    id_cliente: str
+    def __init__(self, identificacion: str, nombre: str, correo: str) -> None:
+        self._identificacion = identificacion
+        self._nombre = nombre
+        self._correo = correo
 
-    # Método de presentación (Polimorfismo con la firma de Producto)
+    @property
+    def identificacion(self) -> str:
+        return self._identificacion
+
     def mostrar_informacion(self) -> str:
-        return f"Cliente ID: {self.id_cliente} | Nombre: {self.nombre} | Correo: {self.correo}"
+        return f"[CLIENTE] ID: {self._identificacion} | Nombre: {self._nombre} | Correo: {self._correo}"
