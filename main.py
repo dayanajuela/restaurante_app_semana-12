@@ -1,88 +1,162 @@
-# main.py
-from servicios.restaurante import Restaurante
 from modelos.producto import Producto
-from modelos.bebida import Bebida
-from modelos.cliente import Cliente
+from modelos.usuario import Usuario
+from servicios.restaurante import Restaurante
+
+# Tupla para información estable del sistema (Opciones inmutables)
+OPCIONES_MENU = (
+    "1. Registrar producto",
+    "2. Buscar producto",
+    "3. Actualizar producto",
+    "4. Eliminar producto",
+    "5. Listar productos",
+    "6. Registrar usuario",
+    "7. Listar usuarios",
+    "8. Ver categorías únicas (Set)",
+    "9. Salir"
+)
 
 def mostrar_menu() -> None:
-    print("\n========================================")
-    print("         SISTEMA DE RESTAURANTE         ")
-    print("========================================")
-    print("1. Registrar producto")
-    print("2. Registrar bebida")
-    print("3. Registrar cliente")
-    print("----------------------------------------")
-    print("4. Listar productos")
-    print("5. Listar clientes")
-    print("----------------------------------------")
-    print("6. Salir")
+    print("\n==========================================")
+    print("      SISTEMA DE GESTIÓN RESTAURANTE      ")
+    print("==========================================")
+    for opcion in OPCIONES_MENU:
+        print(opcion)
+    print("==========================================")
 
 def menu_registrar_producto(servicio: Restaurante) -> None:
     print("\n--- REGISTRAR PRODUCTO ---")
     codigo = input("Ingrese el código único: ").strip()
-    nombre = input("Ingrese el nombre del plato: ").strip()
-    categoria = input("Ingrese la categoría (Platillo/Entrada/Postre): ").strip()
-    try:
-        precio = float(input("Ingrese el precio: "))
-        if codigo and nombre and categoria:
-            nuevo_prod = Producto(codigo, nombre, categoria, precio)
-            servicio.registrar_producto(nuevo_prod)
-        else:
-            print("⚠️ Error: Todos los campos de texto son obligatorios.")
-    except ValueError:
-        print("⚠️ Error: El precio debe ser un número decimal válido.")
+    nombre = input("Ingrese el nombre del producto: ").strip()
+    categoria = input("Ingrese la categoría: ").strip()
+    
+    if not codigo or not nombre or not categoria:
+        print("❌ Error: Todos los campos son obligatorios.")
+        return
 
-def menu_registrar_bebida(servicio: Restaurante) -> None:
-    print("\n--- REGISTRAR BEBIDA ---")
-    codigo = input("Ingrese el código único: ").strip()
-    nombre = input("Ingrese el nombre de la bebida: ").strip()
     try:
-        precio = float(input("Ingrese el precio: "))
-        tamano = input("Ingrese el tamaño (ej. 500ml / 1L): ").strip()
-        tipo_envase = input("Ingrese el tipo de envase (ej. Vidrio / Plástico): ").strip()
-        
-        if codigo and nombre and tamano and tipo_envase:
-            nueva_bebida = Bebida(codigo, nombre, precio, tamano, tipo_envase)
-            servicio.registrar_producto(nueva_bebida)
-        else:
-            print("⚠️ Error: Todos los campos son obligatorios.")
+        precio = float(input("Ingrese el precio ($): "))
+        if precio <= 0:
+            print("❌ Error: El precio debe ser un número positivo.")
+            return
     except ValueError:
-        print("⚠️ Error: El precio debe ser un número decimal válido.")
+        print("❌ Error: Ingrese un valor numérico válido para el precio.")
+        return
 
-def menu_registrar_cliente(servicio: Restaurante) -> None:
-    print("\n--- REGISTRAR CLIENTE ---")
-    identificacion = input("Ingrese la Identificación (Cédula/RUC): ").strip()
+    nuevo_prod = Producto(codigo, nombre, categoria, precio)
+    if servicio.registrar_producto(nuevo_prod):
+        print("✅ Producto registrado exitosamente.")
+    else:
+        print("❌ Error: Ya existe un producto registrado con ese código.")
+
+def menu_buscar_producto(servicio: Restaurante) -> None:
+    print("\n--- BUSCAR PRODUCTO ---")
+    codigo = input("Ingrese el código a buscar: ").strip()
+    prod = servicio.buscar_producto(codigo)
+    if prod:
+        print(f"✅ Encontrado: {prod}")
+    else:
+        print("❌ Producto no encontrado.")
+
+def menu_actualizar_producto(servicio: Restaurante) -> None:
+    print("\n--- ACTUALIZAR PRODUCTO ---")
+    codigo = input("Ingrese el código del producto a actualizar: ").strip()
+    if not servicio.buscar_producto(codigo):
+        print("❌ Producto no encontrado.")
+        return
+
+    nombre = input("Ingrese el nuevo nombre: ").strip()
+    categoria = input("Ingrese la nueva categoría: ").strip()
+    try:
+        precio = float(input("Ingrese el nuevo precio ($): "))
+        if precio <= 0:
+            print("❌ Error: El precio debe ser un valor positivo.")
+            return
+    except ValueError:
+        print("❌ Error: El precio ingresado no es válido.")
+        return
+
+    if servicio.actualizar_producto(codigo, nombre, categoria, precio):
+        print("✅ Producto actualizado exitosamente.")
+
+def menu_eliminar_producto(servicio: Restaurante) -> None:
+    print("\n--- ELIMINAR PRODUCTO ---")
+    codigo = input("Ingrese el código del producto a eliminar: ").strip()
+    if servicio.eliminar_producto(codigo):
+        print("✅ Producto eliminado exitosamente.")
+    else:
+        print("❌ Error: No se encontró el producto con ese código.")
+
+def menu_listar_productos(servicio: Restaurante) -> None:
+    print("\n--- LISTA DE PRODUCTOS ---")
+    productos = servicio.listar_productos()
+    if not productos:
+        print("No hay productos registrados en el sistema.")
+    else:
+        for p in productos:
+            print(p)
+
+def menu_registrar_usuario(servicio: Restaurante) -> None:
+    print("\n--- REGISTRAR USUARIO ---")
+    identificacion = input("Ingrese la identificación/ID único: ").strip()
     nombre = input("Ingrese el nombre completo: ").strip()
     correo = input("Ingrese el correo electrónico: ").strip()
-    
-    if identificacion and nombre and correo:
-        nuevo_cliente = Cliente(identificacion, nombre, correo)
-        servicio.registrar_cliente(nuevo_cliente)
-    else:
-        print("⚠️ Error: Todos los campos son obligatorios.")
 
-def ejecutar_sistema() -> None:
-    servicio_restaurante = Restaurante()
-    
+    if not identificacion or not nombre or not correo:
+        print("❌ Error: Todos los campos de usuario son obligatorios.")
+        return
+
+    nuevo_usuario = Usuario(identificacion, nombre, correo)
+    if servicio.registrar_usuario(nuevo_usuario):
+        print("✅ Usuario registrado exitosamente.")
+    else:
+        print("❌ Error: Ya existe un usuario registrado con esa identificación.")
+
+def menu_listar_usuarios(servicio: Restaurante) -> None:
+    print("\n--- LISTA DE USUARIOS ---")
+    usuarios = servicio.listar_usuarios()
+    if not usuarios:
+        print("No hay usuarios registrados en el sistema.")
+    else:
+        for u in usuarios:
+            print(u)
+
+def menu_ver_categorias(servicio: Restaurante) -> None:
+    print("\n--- CATEGORÍAS ÚNICAS REGISTRADAS (SET) ---")
+    categorias = servicio.obtener_categorias_unicas()
+    if not categorias:
+        print("No hay categorías disponibles aún.")
+    else:
+        for cat in categorias:
+            print(f"• {cat}")
+
+def main() -> None:
+    servicio_restaurante = Restaurante("Mi Restaurante Gourmet")
+
+    # Diccionario para mapear opciones con funciones (Relación clave -> valor)
+    acciones = {
+        "1": menu_registrar_producto,
+        "2": menu_buscar_producto,
+        "3": menu_actualizar_producto,
+        "4": menu_eliminar_producto,
+        "5": menu_listar_productos,
+        "6": menu_registrar_usuario,
+        "7": menu_listar_usuarios,
+        "8": menu_ver_categorias,
+    }
+
     while True:
         mostrar_menu()
-        opcion = input("\nSeleccione una opción (1-6): ").strip()
-        
-        if opcion == "1":
-            menu_registrar_producto(servicio_restaurante)
-        elif opcion == "2":
-            menu_registrar_bebida(servicio_restaurante)
-        elif opcion == "3":
-            menu_registrar_cliente(servicio_restaurante)
-        elif opcion == "4":
-            servicio_restaurante.listar_productos()
-        elif opcion == "5":
-            servicio_restaurante.listar_clientes()
-        elif opcion == "6":
-            print("\n👋 ¡Gracias por usar el sistema! Saliendo...")
+        opcion = input("Seleccione una opción (1-9): ").strip()
+
+        if opcion == "9":
+            print("\n👋 ¡Gracias por usar el sistema! Hasta luego.")
             break
+
+        accion = acciones.get(opcion)
+        if accion:
+            accion(servicio_restaurante)
         else:
-            print("❌ Opción inválida. Intente del 1 al 6.")
+            print("❌ Opción no válida. Intente nuevamente.")
 
 if __name__ == "__main__":
-    ejecutar_sistema()
+    main()

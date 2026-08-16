@@ -1,37 +1,51 @@
-# Sistema Básico de Gestión de Restaurante (POO)
+# Sistema de Gestión de Restaurante - Semana 9
 
-## Información del Estudiante
-* **Nombre Completo:** Keyder Dayana Juela Huanca
-* **Materia:** Programación Orientada a Objetos
-* **Actividad:** Tarea Académica - Organizacion Modular de un Sistema
+**Estudiante:** Keyder Dayana Juela Huanca  
+**Materia:** Programación Orientada a Objetos  
 
 ---
 
-## Descripción del Sistema
-Este proyecto implementa un sistema básico de simulación y gestión interna para un restaurante empleando los pilares fundamentales de la Programación Orientada a Objetos (POO) en Python. El sistema permite modelar entidades individuales como platos o bebidas (`Producto`) y usuarios de las instalaciones (`Cliente`), centralizando su administración dentro de una clase de control lógico (`Restaurante`) mediante tipos de datos compuestos (listas).
+## 📌 Descripción del Sistema
+Evolución del proyecto `restaurante_app` mediante la integración práctica de estructuras de datos dinámicas y estáticas (`list`, `tuple`, `dict`, `set`), manteniendo una arquitectura modular limpia y aplicando la correcta separación de responsabilidades entre los modelos de datos, la lógica de servicios y la interacción por consola.
 
 ---
 
-## Importancia de la Estructura Modular e Identificadores Descriptivos
+## 🛠️ Justificación de Estructuras de Datos
 
-### 1. Estructura Modular e Importaciones
-La correcta separación de carpetas y archivos permite aislar las responsabilidades del software. Al estructurar paquetes con archivos `__init__.py`, Python es capaz de reconocer directorios específicos (`modelos` y `servicios`) para importar componentes de forma limpia, promoviendo la escalabilidad, el mantenimiento eficiente y evitando fallas de acoplamiento de código.
-
-### 2. Identificadores Descriptivos y Tipado Eficiente
-El uso estricto de convenciones como `PascalCase` para clases y `snake_case` junto a anotaciones explícitas de tipo de datos (`str`, `int`, `float`, `bool`) mejora significativamente la legibilidad del código para terceros. Evitar variables genéricas asegura que el código sea autoexplicativo y disminuye drásticamente la tasa de errores de lógica durante el ciclo de desarrollo.
+* **Listas (`list`):** Administran las colecciones dinámicas de `productos` y `usuarios` en el servicio `Restaurante`. Permiten agregar, buscar, actualizar y eliminar objetos en tiempo de ejecución.
+* **Tuplas (`tuple`):** Almacenan la constante `OPCIONES_MENU` en `main.py`. Se utiliza por ser una estructura inmutable que garantiza la integridad de las opciones del menú.
+* **Diccionarios (`dict`):** Relacionan la opción seleccionada por el usuario con su respectiva función en el menú (`acciones`). Permiten ejecutar acciones de forma directa sin usar bloques condicionales extensos (`if-elif`).
+* **Conjuntos (`set`):** Utilizados en el método `obtener_categorias_unicas()` para extraer y presentar únicamente las categorías de los productos registrados sin duplicados.
 
 ---
 
-## Estructura Esperada del Repositorio
-
-```text
+## 📁 Estructura del Proyecto
 restaurante_app/
+│
 ├── modelos/
 │   ├── __init__.py
 │   ├── producto.py
-│   └── cliente.py
+│   └── usuario.py
+│
 ├── servicios/
 │   ├── __init__.py
 │   └── restaurante.py
+│
 ├── main.py
 └── README.md
+---
+
+## 🚀 Instrucciones de Ejecución
+
+1. Abrir una terminal en la carpeta raíz del proyecto (`restaurante_app/`).
+2. Ejecutar el script principal con el siguiente comando:
+   ```bash
+   python main.py
+   ```
+   3. Interactuar con las opciones desplegadas en consola (1 al 9).
+
+---
+
+## 💡 Reflexión sobre la Selección de Estructuras de Datos
+
+Seleccionar la estructura de datos adecuada según las necesidades del problema es esencial para escribir código eficiente, mantenible y legible. El uso de **listas** provee flexibilidad para colecciones cambiantes, mientras que las **tuplas** aportan seguridad para valores inmutables. Por su parte, los **diccionarios** simplifican el control de flujo al mapear claves a funciones, y los **conjuntos** resuelven la unicidad de datos de forma nativa. Aplicar cada estructura en el contexto correcto optimiza tanto el rendimiento como la claridad de la arquitectura.
