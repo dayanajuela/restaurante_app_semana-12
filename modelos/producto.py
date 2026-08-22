@@ -38,3 +38,11 @@ class Producto:
 
     def __str__(self) -> str:
         return f"[{self.__codigo}] {self.__nombre} | Categoría: {self.__categoria} | Precio: ${self.__precio:.2f}"
+
+    def to_dict(self) -> dict:
+        return {
+            "codigo": self.__codigo,
+            "nombre": self.__nombre,
+            "categoria": self.__categoria,
+            "precio": self.__precio
+    }   
