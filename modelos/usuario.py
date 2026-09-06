@@ -1,29 +1,30 @@
 class Usuario:
-    """Clase general que representa un usuario registrado en el sistema."""
-    def __init__(self, identificacion: str, nombre: str, correo: str) -> None:
-        self.__identificacion: str = identificacion
-        self.__nombre: str = nombre
-        self.__correo: str = correo
+    def __init__(self, identificacion: str, nombre: str, correo: str = ""):
+        if not identificacion or not identificacion.strip():
+            raise ValueError("La identificación no puede estar vacía.")
+        if not nombre or not nombre.strip():
+            raise ValueError("El nombre no puede estar vacío.")
 
-    @property
-    def identificacion(self) -> str:
-        return self.__identificacion
+        self.identificacion = identificacion.strip()
+        self.nombre = nombre.strip()
+        self.correo = correo.strip() if correo else ""
 
-    @property
-    def nombre(self) -> str:
-        return self.__nombre
+    def to_dict(self) -> dict:
+        return {
+            "identificacion": self.identificacion,
+            "nombre": self.nombre,
+            "correo": self.correo
+        }
 
-    @nombre.setter
-    def nombre(self, nuevo_nombre: str) -> None:
-        self.__nombre = nuevo_nombre
-
-    @property
-    def correo(self) -> str:
-        return self.__correo
-
-    @correo.setter
-    def correo(self, nuevo_correo: str) -> None:
-        self.__correo = nuevo_correo
-
-    def __str__(self) -> str:
-        return f"ID: {self.__identificacion} | Nombre: {self.__nombre} | Correo: {self.__correo}"
+    @staticmethod
+    def from_dict(data: dict):
+        if not isinstance(data, dict):
+            raise TypeError("Se esperaba un diccionario.")
+        required_keys = ("identificacion", "nombre")
+        if not all(k in data for k in required_keys):
+            raise KeyError("Claves faltantes para reconstruir el Usuario.")
+        return Usuario(
+            identificacion=data["identificacion"],
+            nombre=data["nombre"],
+            correo=data.get("correo", "")
+        )

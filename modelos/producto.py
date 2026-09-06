@@ -1,48 +1,44 @@
-# modelos/producto.py
-
 class Producto:
-    """Clase que representa un producto del restaurante."""
-    def __init__(self, codigo: str, nombre: str, categoria: str, precio: float) -> None:
-        self.__codigo: str = codigo
-        self.__nombre: str = nombre
-        self.__categoria: str = categoria
-        self.__precio: float = precio
+    def __init__(self, codigo: str, nombre: str, precio: float, stock: int = 0):
+        if not codigo or not codigo.strip():
+            raise ValueError("El código no puede estar vacío.")
+        if not nombre or not nombre.strip():
+            raise ValueError("El nombre no puede estar vacío.")
+        if precio < 0:
+            raise ValueError("El precio no puede ser negativo.")
+        if stock < 0:
+            raise ValueError("El stock no puede ser negativo.")
 
-    @property
-    def codigo(self) -> str:
-        return self.__codigo
+        self.codigo = codigo.strip()
+        self.nombre = nombre.strip()
+        self.precio = float(precio)
+        self.stock = int(stock)
 
-    @property
-    def nombre(self) -> str:
-        return self.__nombre
-
-    @nombre.setter
-    def nombre(self, nuevo_nombre: str) -> None:
-        self.__nombre = nuevo_nombre
-
-    @property
-    def categoria(self) -> str:
-        return self.__categoria
-
-    @categoria.setter
-    def categoria(self, nueva_categoria: str) -> None:
-        self.__categoria = nueva_categoria
-
-    @property
-    def precio(self) -> float:
-        return self.__precio
-
-    @precio.setter
-    def precio(self, nuevo_precio: float) -> None:
-        self.__precio = nuevo_precio
-
-    def __str__(self) -> str:
-        return f"[{self.__codigo}] {self.__nombre} | Categoría: {self.__categoria} | Precio: ${self.__precio:.2f}"
+    def reducir_stock(self, cantidad: int):
+        if cantidad <= 0:
+            raise ValueError("La cantidad debe ser mayor a cero.")
+        if cantidad > self.stock:
+            raise ValueError("Stock insuficiente.")
+        self.stock -= cantidad
 
     def to_dict(self) -> dict:
         return {
-            "codigo": self.__codigo,
-            "nombre": self.__nombre,
-            "categoria": self.__categoria,
-            "precio": self.__precio
-    }   
+            "codigo": self.codigo,
+            "nombre": self.nombre,
+            "precio": self.precio,
+            "stock": self.stock
+        }
+
+    @staticmethod
+    def from_dict(data: dict):
+        if not isinstance(data, dict):
+            raise TypeError("Se esperaba un diccionario.")
+        required_keys = ("codigo", "nombre", "precio", "stock")
+        if not all(k in data for k in required_keys):
+            raise KeyError("Claves faltantes para reconstruir el Producto.")
+        return Producto(
+            codigo=data["codigo"],
+            nombre=data["nombre"],
+            precio=data["precio"],
+            stock=data["stock"]
+        )

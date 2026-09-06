@@ -1,54 +1,24 @@
 import json
 import os
-from modelos.producto import Producto
 
 class ArchivoServicio:
-    def __init__(self, ruta_archivo: str = "datos/productos.json"):
-        self.ruta_archivo = ruta_archivo
-        self._asegurar_directorio()
-
-    def _asegurar_directorio(self):
-        directorio = os.path.dirname(self.ruta_archivo)
-        if directorio and not os.path.exists(directorio):
-            os.makedirs(directorio)
-
-    def cargar_productos(self) -> list[Producto]:
-        productos = []
-        if not os.path.exists(self.ruta_archivo):
-            return productos
-
+    @staticmethod
+    def cargar_datos(ruta_archivo: str) -> list:
+        if not os.path.exists(ruta_archivo):
+            return []
         try:
-            with open(self.ruta_archivo, "r", encoding="utf-8") as archivo:
-                datos = json.load(archivo)
-                for item in datos:
-                    try:
-                        p = Producto(
-                            codigo=item["codigo"],
-                            nombre=item["nombre"],
-                            categoria=item["categoria"],
-                            precio=float(item["precio"])
-                        )
-                        productos.append(p)
-                    except (KeyError, ValueError) as e:
-                        print(f"Aviso: Registro omitido por datos inválidos -> {e}")
-        except FileNotFoundError:
-            print("Archivo no encontrado. Se iniciará con lista vacía.")
-        except json.JSONDecodeError:
-            print("Error: Formato JSON inválido.")
-        except PermissionError:
-            print("Error: Permisos insuficientes para leer el archivo.")
-        
-        return productos
+            with open(ruta_archivo, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError, PermissionError):
+            return []
 
-    def guardar_productos(self, productos: list[Producto]) -> bool:
+    @staticmethod
+    def guardar_datos(ruta_archivo: str, datos: list) -> bool:
         try:
-            lista_dict = [p.to_dict() for p in productos]
-            with open(self.ruta_archivo, "w", encoding="utf-8") as archivo:
-                json.dump(lista_dict, archivo, indent=4, ensure_ascii=False)
+            os.makedirs(os.path.dirname(ruta_archivo), exist_ok=True)
+            with open(ruta_archivo, "w", encoding="utf-8") as f:
+                json.dump(datos, f, ensure_ascii=False, indent=4)
             return True
-        except PermissionError:
-            print("Error: Permisos insuficientes para escribir en el archivo.")
-            return False
-        except Exception as e:
-            print(f"Error al guardar datos: {e}")
+        except (PermissionError, OSError) as e:
+            print(f"[ERROR DE ARCHIVO]: No se pudieron guardar los datos: {e}")
             return False

@@ -1,8 +1,8 @@
 [
     {
-        "codigo": "P001",
+        "codigo": "P01",
         "nombre": "Hamburguesa",
-        "categoria": "Plato Fuerte",
-        "precio": 5.5
+        "precio": 8.5,
+        "stock": 7
     }
 ]
