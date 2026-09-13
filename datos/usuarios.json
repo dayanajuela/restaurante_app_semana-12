@@ -1,7 +1,14 @@
 [
     {
-        "identificacion": "101",
-        "nombre": "Carlos Aguirre",
-        "correo": ""
+        "identificacion": "admin",
+        "nombre": "Administrador General",
+        "rol": "Administrador",
+        "clave": "1234"
+    },
+    {
+        "identificacion": "cajero1",
+        "nombre": "Juan Pérez",
+        "rol": "Cajero",
+        "clave": "abcd"
     }
 ]

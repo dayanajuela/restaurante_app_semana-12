@@ -1,36 +1,49 @@
-# Sistema de Gestión de Restaurante - Semana 12
+# Sistema de Gestión de Restaurante - Semana 13
 
-## Descripción del Proyecto
-Evolución del sistema de gestión de restaurante enfocada en la **optimización del rendimiento** mediante la incorporación de estructuras de datos orientadas a búsquedas de alta eficiencia ($O(1)$). Se reestructuró la capa de servicios para reemplazar el recorrido lineal de listas por diccionarios hash indexados por claves únicas (`identificacion` y `codigo`).
+Aplicación de escritorio desarrollada en Python utilizando Tkinter bajo la arquitectura Modelo-Vista-Controlador (MVC), con persistencia de datos en formato JSON y control de versiones integrado con Git y GitHub.
 
-## Estructura del Proyecto
+## 🚀 Novedades y Avances - Semana 13
+
+En esta fase se completó la integración final del módulo de ventas y la persistencia completa del sistema:
+
+* **Módulo de Ventas Integrado:** Desarrollo del flujo completo para agregar productos al carrito, calcular subtotales/totales dinámicamente y procesar la transacción.
+* **Gestión y Control de Inventario:** Descuento automático de stock en el archivo `datos/productos.json` al confirmar cada venta de forma limpia y precisa.
+* **Persistencia de Datos JSON:** 
+  * Registro de transacciones históricas en `datos/ventas.json`.
+  * Serialización de objetos utilizando los métodos `to_dict()` y `from_dict()` en todos los modelos (`Producto`, `Usuario`, `Venta`).
+* **Manejo de Excepciones y Validaciones:**
+  * Control de stock insuficiente antes de procesar ventas.
+  * Normalización en la lectura/escritura de archivos JSON para prevenir errores en tiempo de ejecución.
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Lenguaje:** Python 3.x
+* **Interfaz Gráfica:** Tkinter / ttk
+* **Persistencia:** Archivos JSON (`productos.json`, `usuarios.json`, `ventas.json`)
+* **Arquitectura:** MVC (Modelo - Vista - Controlador / Servicios)
+* **Control de Versiones:** Git & GitHub
+
+## 📁 Estructura del Proyecto
+
+```text
 restaurante_app/
+│
 ├── datos/
 │   ├── productos.json
 │   ├── usuarios.json
 │   └── ventas.json
+│
 ├── modelos/
-│   ├── init.py
 │   ├── producto.py
 │   ├── usuario.py
 │   └── venta.py
+│
 ├── servicios/
-│   ├── init.py
 │   ├── archivo_servicio.py
-│   └── restaurante.py
+│   └── restaurante_servicio.py
+│
+├── ui/
+│   └── ... (vistas del sistema)
+│
 ├── main.py
 └── README.md
-## Mejoras de Rendimiento Aplicadas (Semana 12)
-1. **Indexación con Diccionarios**:
-   - `self.productos`: Indexado mediante `{codigo: Objeto Producto}`.
-   - `self.usuarios`: Indexado mediante `{identificacion: Objeto Usuario}`.
-2. **Búsquedas de Complejidad $O(1)$**:
-   - Validación de duplicados al registrar productos/usuarios de forma instantánea.
-   - Localización directa de entidades durante las transacciones de venta sin recorrer colecciones completas.
-3. **Mantenimiento del Modelo y Consola**:
-   - Se preservó la compatibilidad total con la capa `main.py` y el formato de persistencia en archivos JSON (`datos/`).
-
-## Ejecución del Proyecto
-Para ejecutar la aplicación en consola:
-```bash
-python main.py

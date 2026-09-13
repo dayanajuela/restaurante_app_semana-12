@@ -1,7 +1,15 @@
 [
     {
-        "usuario_id": "101",
-        "producto_codigo": "P01",
-        "cantidad": 3
+        "id_venta": 1,
+        "id_usuario": "admin",
+        "productos": [
+            {
+                "producto": "Hamburguesa",
+                "cantidad": 1,
+                "precio": 0.0,
+                "subtotal": 0.0
+            }
+        ],
+        "total": 0.0
     }
 ]
