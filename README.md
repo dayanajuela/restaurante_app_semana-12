@@ -1,25 +1,25 @@
-# Sistema de Gestión de Restaurante - Semana 13
+# Sistema de Gestión de Restaurante - Semana 14
 
-Aplicación de escritorio desarrollada en Python utilizando Tkinter bajo la arquitectura Modelo-Vista-Controlador (MVC), con persistencia de datos en formato JSON y control de versiones integrado con Git y GitHub.
+Aplicación de escritorio desarrollada en Python con Tkinter y ttk, aplicando la arquitectura Modelo-Vista-Controlador (MVC), persistencia en archivos JSON y control de versiones con Git/GitHub.
 
-## 🚀 Novedades y Avances - Semana 13
+## 🚀 Novedades y Avances - Semana 14
 
-En esta fase se completó la integración final del módulo de ventas y la persistencia completa del sistema:
+En esta fase se evolucionó la interfaz gráfica incorporando componentes y contenedores para organizar la información y permitir la gestión completa de productos:
 
-* **Módulo de Ventas Integrado:** Desarrollo del flujo completo para agregar productos al carrito, calcular subtotales/totales dinámicamente y procesar la transacción.
-* **Gestión y Control de Inventario:** Descuento automático de stock en el archivo `datos/productos.json` al confirmar cada venta de forma limpia y precisa.
-* **Persistencia de Datos JSON:** 
-  * Registro de transacciones históricas en `datos/ventas.json`.
-  * Serialización de objetos utilizando los métodos `to_dict()` y `from_dict()` en todos los modelos (`Producto`, `Usuario`, `Venta`).
-* **Manejo de Excepciones y Validaciones:**
-  * Control de stock insuficiente antes de procesar ventas.
-  * Normalización en la lectura/escritura de archivos JSON para prevenir errores en tiempo de ejecución.
+* **Organización mediante Contenedores (Frames/LabelFrames):** Estructuración modular de la ventana principal separando las áreas de formulario, acciones y visualización de datos.
+* **Módulo CRUD de Productos:**
+  * **Registro:** Formulario interactivo con campos (`Entry`, `Spinbox`, `Combobox`) para agregar nuevos productos.
+  * **Consulta/Carga:** Visualización dinámica de los datos almacenados.
+  * **Actualización:** Modificación de datos y stock de productos existentes.
+  * **Eliminación:** Remoción de elementos directamente desde la interfaz.
+* **Persistencia y Separación de Responsabilidades:** Todas las operaciones pasan a través de `RestauranteServicio`, garantizando que la UI no maneje lógica de negocio ni manipulación directa de archivos JSON.
+* **Manejo de Eventos y Controles:** Uso del parámetro `command=` en botones para la activación de acciones.
 
 ## 🛠️ Tecnologías Utilizadas
 
 * **Lenguaje:** Python 3.x
-* **Interfaz Gráfica:** Tkinter / ttk
-* **Persistencia:** Archivos JSON (`productos.json`, `usuarios.json`, `ventas.json`)
+* **Interfaz Gráfica:** Tkinter / ttk (`LabelFrame`, `Frame`, `Entry`, `Button`, `Treeview`)
+* **Persistencia:** Archivos JSON (`productos.json`, `usuarios.json`)
 * **Arquitectura:** MVC (Modelo - Vista - Controlador / Servicios)
 * **Control de Versiones:** Git & GitHub
 
@@ -30,20 +30,23 @@ restaurante_app/
 │
 ├── datos/
 │   ├── productos.json
-│   ├── usuarios.json
-│   └── ventas.json
+│   └── usuarios.json
 │
 ├── modelos/
+│   ├── __init__.py
 │   ├── producto.py
-│   ├── usuario.py
-│   └── venta.py
+│   └── usuario.py
 │
 ├── servicios/
+│   ├── __init__.py
 │   ├── archivo_servicio.py
 │   └── restaurante_servicio.py
 │
 ├── ui/
-│   └── ... (vistas del sistema)
+│   ├── __init__.py
+│   ├── login_view.py
+│   └── main_view.py
 │
+├── assets/ (opcional)
 ├── main.py
 └── README.md
