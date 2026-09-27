@@ -5,96 +5,132 @@ from modelos.venta import Venta
 
 class RestauranteServicio:
     def __init__(self):
-        self.ruta_productos = "datos/productos.json"
+        self.archivo_servicio = ArchivoServicio()
+        
+        # Rutas de los archivos JSON de datos
         self.ruta_usuarios = "datos/usuarios.json"
+        self.ruta_productos = "datos/productos.json"
         self.ruta_ventas = "datos/ventas.json"
+        
+        # Carga inicial de datos
+        self.usuarios = self.cargar_usuarios()
+        self.productos = self.cargar_productos()
+        self.ventas = self.cargar_ventas()
 
-    # --- USUARIOS ---
-    def obtener_usuarios(self):
-        datos = ArchivoServicio.cargar_json(self.ruta_usuarios)
-        return [Usuario.from_dict(d) for d in datos]
+    # --- CARGA DE DATOS DESDE JSON ---
 
-    def validar_acceso(self, identificacion, clave):
-        usuarios = self.obtener_usuarios()
-        for u in usuarios:
-            if str(u.identificacion) == str(identificacion) and str(u.clave) == str(clave):
-                return True, u
+    def cargar_usuarios(self):
+        datos = self.archivo_servicio.cargar_json(self.ruta_usuarios)
+        usuarios = []
+        for u in datos:
+            if isinstance(u, dict):
+                ident = u.get("identificacion") or u.get("id", "")
+                nombre = u.get("nombre", "")
+                rol = u.get("rol", "Cliente")
+                clave = u.get("clave", "")
+                usuarios.append(Usuario(ident, nombre, rol, clave))
+            else:
+                usuarios.append(u)
+        return usuarios
+
+    def cargar_productos(self):
+        datos = self.archivo_servicio.cargar_json(self.ruta_productos)
+        productos = []
+        for index, p in enumerate(datos, start=1):
+            if isinstance(p, dict):
+                # Busca 'codigo' o 'id' para evitar enviar un código vacío
+                codigo = p.get("codigo") or p.get("id") or f"P0{index}"
+                nombre = p.get("nombre", "Sin nombre")
+                precio = p.get("precio", 0.0)
+                productos.append(Producto(str(codigo), nombre, precio))
+            else:
+                productos.append(p)
+        return productos
+
+    def cargar_ventas(self):
+        datos = self.archivo_servicio.cargar_json(self.ruta_ventas)
+        ventas = []
+        for v in datos:
+            if isinstance(v, dict):
+                v_id = v.get("id", 0)
+                usuario = v.get("usuario", "")
+                producto = v.get("producto", "")
+                ventas.append(Venta(v_id, usuario, producto))
+            else:
+                ventas.append(v)
+        return ventas
+
+    # --- AUTENTICACIÓN ---
+
+    def autenticar(self, identificacion, clave):
+        for u in self.usuarios:
+            u_ident = getattr(u, 'identificacion', None) or (u.get('identificacion') if isinstance(u, dict) else None)
+            u_clave = getattr(u, 'clave', None) or (u.get('clave') if isinstance(u, dict) else None)
+            
+            if str(u_ident) == str(identificacion) and str(u_clave) == str(clave):
+                return u
+        return None
+
+    # Alias para compatibilidad con la llamada desde LoginView
+    def autenticar_usuario(self, identificacion, clave):
+        usr = self.autenticar(identificacion, clave)
+        if usr:
+            return True, usr
         return False, None
 
-    # --- PRODUCTOS ---
+    # --- MÉTODOS PARA COMBOBOX / INTERFAZ ---
+
+    def obtener_usuarios(self):
+        lista_nombres = []
+        for u in self.usuarios:
+            if hasattr(u, 'nombre'):
+                lista_nombres.append(u.nombre)
+            elif isinstance(u, dict):
+                lista_nombres.append(u.get('nombre', 'Sin nombre'))
+            else:
+                lista_nombres.append(str(u))
+        return lista_nombres
+
     def obtener_productos(self):
-        datos = ArchivoServicio.cargar_json(self.ruta_productos)
-        return [Producto.from_dict(d) for d in datos]
+        lista_prods = []
+        for p in self.productos:
+            if hasattr(p, 'nombre'):
+                lista_prods.append(p.nombre)
+            elif isinstance(p, dict):
+                lista_prods.append(p.get('nombre', 'Sin producto'))
+            else:
+                lista_prods.append(str(p))
+        return lista_prods
 
-    # --- VENTAS ---
     def obtener_ventas(self):
-        datos = ArchivoServicio.cargar_json(self.ruta_ventas)
-        return [Venta.from_dict(d) for d in datos]
+        return self.ventas
 
-    def registrar_venta(self, id_usuario, carrito):
-        if not carrito:
-            return False, "El carrito está vacío."
+    # --- REGISTRO Y PERSISTENCIA DE VENTAS ---
 
-        productos = self.obtener_productos()
+    def registrar_venta(self, usuario, producto):
+        if not usuario or not producto:
+            raise ValueError("Debe seleccionar un usuario y un producto")
 
-        # Validar stock para todos los elementos del carrito
-        for item in carrito:
-            val = item.get("codigo") or item.get("nombre") or item.get("producto")
-            identificador = val.nombre if hasattr(val, 'nombre') else str(val)
+        nuevo_id = len(self.ventas) + 1
+        usr_nombre = usuario.nombre if hasattr(usuario, 'nombre') else str(usuario)
+        prod_nombre = producto.nombre if hasattr(producto, 'nombre') else str(producto)
 
-            prod_encontrado = None
-            for p in productos:
-                if p.codigo == identificador or p.nombre in identificador or identificador in p.nombre:
-                    prod_encontrado = p
-                    break
-
-            if not prod_encontrado or prod_encontrado.stock < item["cantidad"]:
-                nombre_mostrar = prod_encontrado.nombre if prod_encontrado else identificador
-                return False, f"Stock insuficiente para {nombre_mostrar}."
-
-        # Descontar stock de la lista de productos
-        for item in carrito:
-            val = item.get("codigo") or item.get("nombre") or item.get("producto")
-            identificador = val.nombre if hasattr(val, 'nombre') else str(val)
-
-            for p in productos:
-                if p.codigo == identificador or p.nombre in identificador or identificador in p.nombre:
-                    p.stock -= item["cantidad"]
-                    break
-
-        # Guardar lista de productos actualizada
-        datos_prod = [p.to_dict() for p in productos]
-        ArchivoServicio.guardar_json(self.ruta_productos, datos_prod)
-
-        # Formatear items del carrito y calcular subtotales
-        carrito_limpio = []
-        total = 0.0
-
-        for item in carrito:
-            val = item.get("producto") or item.get("nombre")
-            nombre_str = val.nombre if hasattr(val, 'nombre') else str(val)
-            
-            cantidad = item.get("cantidad", 1)
-            precio = item.get("precio", 0.0)
-            subtotal = item.get("subtotal", cantidad * precio)
-            
-            total += subtotal
-
-            carrito_limpio.append({
-                "producto": nombre_str,
-                "cantidad": cantidad,
-                "precio": precio,
-                "subtotal": subtotal
-            })
-
-        # Generar nueva venta y guardarla
-        ventas = self.obtener_ventas()
-        nueva_id = len(ventas) + 1
+        nueva_venta = Venta(nuevo_id, usr_nombre, prod_nombre)
+        self.ventas.append(nueva_venta)
         
-        nueva_venta = Venta(nueva_id, id_usuario, carrito_limpio, total)
-        ventas.append(nueva_venta)
+        self.guardar_ventas()
+        return nueva_venta
 
-        datos_ventas = [v.to_dict() for v in ventas]
-        ArchivoServicio.guardar_json(self.ruta_ventas, datos_ventas)
-
-        return True, "Venta registrada con éxito."
+    def guardar_ventas(self):
+        datos_guardar = []
+        for v in self.ventas:
+            if hasattr(v, '__dict__'):
+                datos_guardar.append({
+                    "id": getattr(v, 'id', 0),
+                    "usuario": getattr(v, 'usuario', ''),
+                    "producto": getattr(v, 'producto', '')
+                })
+            elif isinstance(v, dict):
+                datos_guardar.append(v)
+                
+        self.archivo_servicio.guardar_json(self.ruta_ventas, datos_guardar)

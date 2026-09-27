@@ -34,7 +34,7 @@ class LoginView(ttk.Frame):
             messagebox.showwarning("Advertencia", "Por favor complete todos los campos.")
             return
 
-        exito, usr_obj = self.servicio.validar_acceso(usuario, clave)
+        exito, usr_obj = self.servicio.autenticar_usuario(usuario, clave)
         if exito:
             self.txt_usuario.delete(0, tk.END)
             self.txt_clave.delete(0, tk.END)

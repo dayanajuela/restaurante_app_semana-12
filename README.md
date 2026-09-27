@@ -1,52 +1,49 @@
-# Sistema de Gestión de Restaurante - Semana 14
+# 🍽️ Sistema de Gestión de Restaurante - Semana 14
 
-Aplicación de escritorio desarrollada en Python con Tkinter y ttk, aplicando la arquitectura Modelo-Vista-Controlador (MVC), persistencia en archivos JSON y control de versiones con Git/GitHub.
+Aplicación de escritorio desarrollada en Python utilizando **Tkinter** y **ttk**, implementando el patrón arquitectónico **Modelo-Vista-Controlador (MVC)**, persistencia de datos mediante archivos **JSON** y control de versiones con **Git/GitHub**[span_2](start_span)[span_2](end_span).
+
+---
 
 ## 🚀 Novedades y Avances - Semana 14
 
-En esta fase se evolucionó la interfaz gráfica incorporando componentes y contenedores para organizar la información y permitir la gestión completa de productos:
+En esta fase se evolucionó la interfaz gráfica incorporando componentes avanzados y contenedores para organizar la información y permitir la gestión completa del sistema[span_3](start_span)[span_3](end_span):
 
-* **Organización mediante Contenedores (Frames/LabelFrames):** Estructuración modular de la ventana principal separando las áreas de formulario, acciones y visualización de datos.
-* **Módulo CRUD de Productos:**
-  * **Registro:** Formulario interactivo con campos (`Entry`, `Spinbox`, `Combobox`) para agregar nuevos productos.
-  * **Consulta/Carga:** Visualización dinámica de los datos almacenados.
-  * **Actualización:** Modificación de datos y stock de productos existentes.
-  * **Eliminación:** Remoción de elementos directamente desde la interfaz.
-* **Persistencia y Separación de Responsabilidades:** Todas las operaciones pasan a través de `RestauranteServicio`, garantizando que la UI no maneje lógica de negocio ni manipulación directa de archivos JSON.
-* **Manejo de Eventos y Controles:** Uso del parámetro `command=` en botones para la activación de acciones.
+- **📦 Organización mediante Contenedores (`Frames` / `LabelFrames`):** Estructuración modular de la ventana principal para separar áreas de formulario, acciones y visualización de datos[span_4](start_span)[span_4](end_span).
+- **🛠️ Módulo CRUD de Productos y Ventas:**
+  - **Registro:** Formulario interactivo con campos (`Entry`, `Spinbox`, `Combobox`) para agregar y gestionar elementos[span_5](start_span)[span_5](end_span).
+  - **Consulta / Carga:** Visualización dinámica de los datos almacenados en los archivos JSON[span_6](start_span)[span_6](end_span).
+  - **Actualización:** Modificación en tiempo real de datos y stock[span_7](start_span)[span_7](end_span).
+  - **Eliminación:** Remoción segura de elementos desde la interfaz[span_8](start_span)[span_8](end_span).
+- **💾 Persistencia y Separación de Responsabilidades:** Todas las operaciones de datos se gestionan a través de `RestauranteServicio`, garantizando que la UI no maneje lógica de negocio ni manipulación directa de los archivos JSON[span_9](start_span)[span_9](end_span).
+- **⚡ Manejo de Eventos y Controles:** Vinculación de acciones mediante `command=` y manejo de eventos del sistema[span_10](start_span)[span_10](end_span).
 
-## 🛠️ Tecnologías Utilizadas
-
-* **Lenguaje:** Python 3.x
-* **Interfaz Gráfica:** Tkinter / ttk (`LabelFrame`, `Frame`, `Entry`, `Button`, `Treeview`)
-* **Persistencia:** Archivos JSON (`productos.json`, `usuarios.json`)
-* **Arquitectura:** MVC (Modelo - Vista - Controlador / Servicios)
-* **Control de Versiones:** Git & GitHub
+---
 
 ## 📁 Estructura del Proyecto
 
 ```text
 restaurante_app/
 │
-├── datos/
+├── assets/                  # Recurso gráfico (logos e imágenes)
+│   └── logo.png
+│
+├── datos/                   # Archivos de almacenamiento persistente
 │   ├── productos.json
-│   └── usuarios.json
+│   ├── usuarios.json
+│   └── ventas.json
 │
-├── modelos/
-│   ├── __init__.py
+├── modelos/                 # Clases de dominio del sistema
 │   ├── producto.py
-│   └── usuario.py
+│   ├── usuario.py
+│   └── venta.py
 │
-├── servicios/
-│   ├── __init__.py
+├── servicios/               # Lógica de negocio y persistencia
 │   ├── archivo_servicio.py
 │   └── restaurante_servicio.py
 │
-├── ui/
-│   ├── __init__.py
+├── ui/                      # Vistas e interfaz de usuario (Tkinter)
 │   ├── login_view.py
 │   └── main_view.py
 │
-├── assets/ (opcional)
-├── main.py
-└── README.md
+├── main.py                  # Punto de entrada de la aplicación
+└── README.md                # Documentación del proyecto
