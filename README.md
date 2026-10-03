@@ -1,49 +1,30 @@
-# 🍽️ Sistema de Gestión de Restaurante - Semana 14
+# Restaurante App - Semana 16
 
-Aplicación de escritorio desarrollada en Python utilizando **Tkinter** y **ttk**, implementando el patrón arquitectónico **Modelo-Vista-Controlador (MVC)**, persistencia de datos mediante archivos **JSON** y control de versiones con **Git/GitHub**[span_2](start_span)[span_2](end_span).
+## Propósito y Evolución
+Evolución del sistema de gestión de restaurante con arquitectura modular en Python y Tkinter, incorporando la gestión avanzada de usuarios, asignación de roles y control de acceso.
 
----
+## Estructura del Proyecto
+- `datos/`: Archivos JSON de persistencia (`productos.json`, `usuarios.json`, `ventas.json`).
+- `modelos/`: Clases de datos del dominio (`producto.py`, `usuario.py`, `venta.py`).
+- `servicios/`: Lógica de negocio y persistencia (`archivo_servicio.py`, `restaurante_servicio.py`).
+- `ui/`: Interfaz gráfica Tkinter (`login_view.py`, `main_view.py`).
+- `assets/`: Recursos gráficos e íconos (`logo.png`).
+- `main.py`: Punto de entrada de la aplicación.
 
-## 🚀 Novedades y Avances - Semana 14
+## Gestión de Usuarios y Roles
+- **Administrador**: Acceso completo a la pestaña de "Gestión de Usuarios" para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) y control de ventas.
+- **Empleado / Cliente**: Acceso restringido únicamente a las vistas operativas de ventas.
+- **Persistencia**: Todos los cambios se leen y almacenan en `datos/usuarios.json` mediante la capa de servicios.
 
-En esta fase se evolucionó la interfaz gráfica incorporando componentes avanzados y contenedores para organizar la información y permitir la gestión completa del sistema[span_3](start_span)[span_3](end_span):
+## Eventos y Atajos de Teclado Implementados
+- `<<TreeviewSelect>>`: Carga automáticamente los datos del usuario seleccionado de la tabla al formulario de edición.
+- `<<ComboboxSelected>>`: Permite reaccionar a la selección dinámica del rol en la interfaz.
+- `<Return>` (Tecla Enter): Acciona el guardado/registro del usuario activo.
+- `<Escape>` (Tecla Esc): Limpia el formulario y deselecciona elementos del Treeview.
+- `command=`: Botones vinculados a los métodos de la clase para reutilización de código.
 
-- **📦 Organización mediante Contenedores (`Frames` / `LabelFrames`):** Estructuración modular de la ventana principal para separar áreas de formulario, acciones y visualización de datos[span_4](start_span)[span_4](end_span).
-- **🛠️ Módulo CRUD de Productos y Ventas:**
-  - **Registro:** Formulario interactivo con campos (`Entry`, `Spinbox`, `Combobox`) para agregar y gestionar elementos[span_5](start_span)[span_5](end_span).
-  - **Consulta / Carga:** Visualización dinámica de los datos almacenados en los archivos JSON[span_6](start_span)[span_6](end_span).
-  - **Actualización:** Modificación en tiempo real de datos y stock[span_7](start_span)[span_7](end_span).
-  - **Eliminación:** Remoción segura de elementos desde la interfaz[span_8](start_span)[span_8](end_span).
-- **💾 Persistencia y Separación de Responsabilidades:** Todas las operaciones de datos se gestionan a través de `RestauranteServicio`, garantizando que la UI no maneje lógica de negocio ni manipulación directa de los archivos JSON[span_9](start_span)[span_9](end_span).
-- **⚡ Manejo de Eventos y Controles:** Vinculación de acciones mediante `command=` y manejo de eventos del sistema[span_10](start_span)[span_10](end_span).
-
----
-
-## 📁 Estructura del Proyecto
-
-```text
-restaurante_app/
-│
-├── assets/                  # Recurso gráfico (logos e imágenes)
-│   └── logo.png
-│
-├── datos/                   # Archivos de almacenamiento persistente
-│   ├── productos.json
-│   ├── usuarios.json
-│   └── ventas.json
-│
-├── modelos/                 # Clases de dominio del sistema
-│   ├── producto.py
-│   ├── usuario.py
-│   └── venta.py
-│
-├── servicios/               # Lógica de negocio y persistencia
-│   ├── archivo_servicio.py
-│   └── restaurante_servicio.py
-│
-├── ui/                      # Vistas e interfaz de usuario (Tkinter)
-│   ├── login_view.py
-│   └── main_view.py
-│
-├── main.py                  # Punto de entrada de la aplicación
-└── README.md                # Documentación del proyecto
+## Instrucciones de Ejecución
+1. Asegurarse de tener Python instalado.
+2. Ejecutar la aplicación desde la raíz del proyecto:
+   ```bash
+   python main.py

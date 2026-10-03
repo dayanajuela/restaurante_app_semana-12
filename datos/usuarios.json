@@ -1,14 +1,16 @@
 [
-    {
-        "identificacion": "admin",
-        "nombre": "Administrador General",
-        "rol": "Administrador",
-        "clave": "1234"
-    },
-    {
-        "identificacion": "cajero1",
-        "nombre": "Juan Pérez",
-        "rol": "Cajero",
-        "clave": "abcd"
-    }
+  {
+    "id_usuario": 1,
+    "nombre": "Administrador Principal",
+    "usuario": "admin",
+    "contrasena": "1234",
+    "rol": "Administrador"
+  },
+  {
+    "id_usuario": 2,
+    "nombre": "Carlos Empleado",
+    "usuario": "carlos",
+    "contrasena": "1234",
+    "rol": "Empleado"
+  }
 ]
